@@ -1,0 +1,6 @@
+name: 'RcppDeepState'
+author: 'Fabrizio Sandri'
+description: 'This Action runs RcppDeepState in any Rcpp-based projects hosted on GitHub'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
