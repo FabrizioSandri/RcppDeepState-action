@@ -9,6 +9,7 @@ RUN apt install -y r-base
 
 # Copy the files to the root filesystem of the container
 COPY src/entrypoint.sh /entrypoint.sh
+COPY src/analyze_package.R /analyze_package.R
 RUN chmod +x /entrypoint.sh
 
 # Executes `entrypoint.sh` when the Docker container starts up
