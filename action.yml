@@ -1,6 +1,13 @@
 name: 'RcppDeepState'
 author: 'Fabrizio Sandri'
 description: 'This Action runs RcppDeepState in any Rcpp-based projects hosted on GitHub'
+inputs:
+  location:  
+    description: 'Location of the package if not in the root of the repository'
+    required: false
+    default: '/'
 runs:
   using: 'docker'
   image: 'Dockerfile'
+  args:
+    - ${{ inputs.location }}
