@@ -1,0 +1,27 @@
+on:
+  push:
+    branches: [initial-prototype]
+  pull_request:
+    branches: [initial-prototype]
+
+name: RcppDeepState
+
+jobs:
+  RcppDeepState:
+    runs-on: ubuntu-latest
+    
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      
+    steps:      
+      - uses: actions/checkout@v2 
+
+      - uses: actions/checkout@v2 # checkout 'FabrizioSandri/RcppDeepState' containing the 'testSAN' package
+        with:
+          repository: FabrizioSandri/RcppDeepState
+          path: RcppDeepState
+
+      - name: Analyze the package with RcppDeepState  # run RccpDeepState on 'testSAN'
+        uses: ./
+        with:
+          location: /RcppDeepState/inst/testpkgs/testSAN
