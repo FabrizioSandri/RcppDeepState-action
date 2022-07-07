@@ -12,7 +12,7 @@ result <- deepstate_harness_analyze_pkg(file.path(GitHub_workspace, location))
 # where the second dimension describes the number of columns, whereas the second 
 # describes the number of errors found.
 getErrors <- function(logtableElement){
-    return (dim(vec)[1])
+    return (dim(logtableElement)[1])
 }
 
 errors <- sapply(result$logtable,  getErrors)
