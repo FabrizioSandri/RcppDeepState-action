@@ -12,9 +12,9 @@ echo -e "CXXFLAGS = \nCXX11FLAGS = \nCXX14FLAGS = \nCXX17FLAGS = \nCXX20FLAGS = 
 echo "RcppDeepState analysis started..."
 
 Rscript "/analyze_package.R"
+retVal=$?
 
 echo "RcppDeepState analysis completed"
 
-# get the exit status code of the analysis and return it to the action
-retVal=$?
+# return the exit status to the action
 exit $retVal
