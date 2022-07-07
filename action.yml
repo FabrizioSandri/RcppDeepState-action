@@ -14,6 +14,11 @@ inputs:
     description: 'Fuzzing phase's duration in seconds'
     required: false
     default: '2'
+  max_inputs:
+    description: 'Fuzzing phase's duration in seconds'
+    required: false
+    default: '2'
+
 
 runs:
   using: 'docker'
@@ -22,3 +27,4 @@ runs:
     - ${{ inputs.location }}
     - ${{ inputs.seed }}
     - ${{ inputs.time_limit }}
+    - ${{ inputs.max_inputs }}
