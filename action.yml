@@ -17,7 +17,7 @@ inputs:
   max_inputs:
     description: 'Number of inputs generated in the fuzzing phase to analyze'
     required: false
-    default: 'all'
+    default: '3'
 
 
 runs:
