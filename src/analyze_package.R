@@ -2,8 +2,10 @@ require(RcppDeepState)
 
 GitHub_workspace <- Sys.getenv("GITHUB_WORKSPACE")
 location <- Sys.getenv("INPUT_LOCATION")
+seed <- Sys.getenv("INPUT_SEED")
 
-deepstate_harness_compile_run(file.path(GitHub_workspace, location))
+
+deepstate_harness_compile_run(file.path(GitHub_workspace, location), seed=seed)
 result <- deepstate_harness_analyze_pkg(file.path(GitHub_workspace, location))
 
 
