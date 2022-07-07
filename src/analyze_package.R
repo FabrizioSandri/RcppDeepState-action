@@ -15,7 +15,15 @@ getErrors <- function(logtableElement){
     return (dim(vec)[1])
 }
 
+errors <- sapply(result$logtable,  getErrors)
 
+# print all the errors and return a proper exit status code
+if (any(errors > 0)){
+    print(result)
+    print(result$logtable)
 
-print(result)
-print(result$logtable)
+    quit(status=1)  # error code
+}else{
+    quit(status=0)  # success
+}
+
