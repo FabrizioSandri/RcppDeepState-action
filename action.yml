@@ -6,8 +6,13 @@ inputs:
     description: 'Location of the package if not in the root of the repository'
     required: false
     default: '/'
+  seed:  
+    description: 'Seed used for deterministic fuzz testing and reproduce the analysis results'
+    required: false
+    default: '-1'
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
     - ${{ inputs.location }}
+    - ${{ inputs.seed }}
