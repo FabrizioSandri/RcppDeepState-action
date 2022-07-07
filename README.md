@@ -6,7 +6,10 @@ RcppDeepState is a fuzz testing library made as a composition of three tools: Rc
 * Link to [RcppDeepState](https://github.com/FabrizioSandri/RcppDeepState)
 
 ## Inputs
--   **location** (default value: `/`) - Relative path under `$GITHUB_WORKSPACE` that contains the package that needs to be analyzed. Default uses the `/` location relative to `$GITHUB_WORKSPACE`, that is `$GITHUB_WORKSPACE`.
+-   **location** (default value: `/`) - Relative path under `$GITHUB_WORKSPACE` that contains the package that needs to be analyzed. Default uses the `/` location relative to `$GITHUB_WORKSPACE`, that is `$GITHUB_WORKSPACE`;
+-   **seed** (default value: `-1`) - control the randomness of the inputs generated in the fuzzing phase;
+-   **time_limit** (default value: `5`) - Fuzzing phase's duration in seconds;
+-   **max_inputs** (default value: `3`) - Maximum number of inputs that will be processed by RcppDeepState.
 
 ## Outputs
 
