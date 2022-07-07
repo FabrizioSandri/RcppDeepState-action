@@ -22,6 +22,25 @@ Before running this GitHub Action it's mandatory to run the [actions/checkout](h
     # analyzed is located.
     # Default: / 
     location: ''
+
+    # Seed value used to control the randomness of the inputs generated in the 
+    # fuzzing phase. This parameter is used to run deterministic fuzz testing 
+    # and reproduce the analysis results over several executions. A value of -1
+    # is used to generate a random value. 
+    # Default: -1
+    seed: ''
+
+    # This parameter controls the fuzzing phase's duration in seconds. 
+    # Default: 5
+    time_limit: ''
+
+    # Maximum number of inputs that will be processed by RcppDeepState. The 
+    # fuzzing phase may generate a lot of inputs, however analyzing all of them
+    # can require a huge amount of time, making this task almost impossible.
+    # Instead by using this parameter it is possible to control the number of 
+    # inputs analyzed by RcppDeepState for each tested function. 
+    # Default: 3
+    max_inputs: ''
 ```
 
 #### Basic example
