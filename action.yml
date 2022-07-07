@@ -15,9 +15,9 @@ inputs:
     required: false
     default: '2'
   max_inputs:
-    description: 'Fuzzing phase's duration in seconds'
+    description: 'Number of inputs generated in the fuzzing phase to analyze'
     required: false
-    default: '2'
+    default: 'all'
 
 
 runs:
