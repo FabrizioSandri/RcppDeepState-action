@@ -21,3 +21,4 @@ runs:
   args:
     - ${{ inputs.location }}
     - ${{ inputs.seed }}
+    - ${{ inputs.time_limit }}
