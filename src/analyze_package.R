@@ -3,9 +3,11 @@ require(RcppDeepState)
 GitHub_workspace <- Sys.getenv("GITHUB_WORKSPACE")
 location <- Sys.getenv("INPUT_LOCATION")
 seed <- Sys.getenv("INPUT_SEED")
+time_limit <- Sys.getenv("INPUT_TIME_LIMIT")
 
-
-deepstate_harness_compile_run(file.path(GitHub_workspace, location), seed=seed)
+deepstate_harness_compile_run(file.path(GitHub_workspace, location), seed=seed
+    time.limit.seconds=time_limit)
+    
 result <- deepstate_harness_analyze_pkg(file.path(GitHub_workspace, location))
 
 
