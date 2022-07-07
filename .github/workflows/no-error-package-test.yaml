@@ -1,0 +1,22 @@
+on:
+  push:
+    branches: [exit-codes]
+  pull_request:
+    branches: [exit-codes]
+
+name: check-exit-code
+
+jobs:
+  RcppDeepState:
+    runs-on: ubuntu-latest
+    
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      
+    steps:      
+      - uses: actions/checkout@v2 
+      
+      - name: Analyze the package with RcppDeepState  # run RccpDeepState on 'TestPackage'
+        uses: ./
+        with:
+          location: /tests/TestPackage

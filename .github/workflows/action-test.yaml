@@ -1,8 +1,8 @@
 on:
   push:
-    branches: [initial-prototype, exit-codes]
+    branches: [initial-prototype]
   pull_request:
-    branches: [initial-prototype, exit-codes]
+    branches: [initial-prototype]
 
 name: RcppDeepState
 
