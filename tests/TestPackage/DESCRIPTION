@@ -1,0 +1,11 @@
+Package: TestPackage
+Type: Package
+Title: TestPackage without errors
+Version: 1.0
+Date: 2022-07-07
+Author: Your Name
+Maintainer: Your Name <your@email.com>
+Description: This is a simple package used for testing purposes. If this package is analyzed with RcppDeepState, no error will be found.
+License: GPL (>= 2)
+Imports: Rcpp (>= 1.0.8)
+LinkingTo: Rcpp
