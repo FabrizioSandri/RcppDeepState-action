@@ -38,6 +38,7 @@ runs:
         max_inputs: ${{ inputs.max_inputs }}
 
     - name: Zip artifact before upload
+      if: failure()
       run: |
         zip -r -q outputs.zip ./${{ inputs.location }}/inst/testfiles
       shell: bash
