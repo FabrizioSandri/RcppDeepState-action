@@ -21,10 +21,18 @@ inputs:
 
 
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
-  args:
-    - ${{ inputs.location }}
-    - ${{ inputs.seed }}
-    - ${{ inputs.time_limit }}
-    - ${{ inputs.max_inputs }}
+  using: "composite"
+  steps:
+
+    - uses: actions/checkout@v2 
+      with:
+        repository: FabrizioSandri/RcppDeepState-action
+        path: RcppDeepState-action
+
+    - name: Analyze the package with RcppDeepState 
+      uses: ./RcppDeepState-action/docker
+      with:
+        location: ${{ inputs.location }}
+        seed: ${{ inputs.seed }}
+        time_limit: ${{ inputs.time_limit }}
+        max_inputs: ${{ inputs.max_inputs }}
