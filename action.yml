@@ -42,3 +42,9 @@ runs:
       run: |
         zip -r -q outputs.zip ./${{ inputs.location }}/inst/testfiles
       shell: bash
+
+    - uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: Test results
+        path: outputs.zip
