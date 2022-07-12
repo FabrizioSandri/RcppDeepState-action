@@ -16,5 +16,8 @@ retVal=$?
 
 echo "RcppDeepState analysis completed"
 
+# remove vgcore files and adjust permissions
+find . -name 'vgcore*' | xargs rm
+
 # return the exit status to the action
 exit $retVal
