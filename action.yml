@@ -36,3 +36,8 @@ runs:
         seed: ${{ inputs.seed }}
         time_limit: ${{ inputs.time_limit }}
         max_inputs: ${{ inputs.max_inputs }}
+
+    - name: Zip artifact before upload
+      run: |
+        zip -r -q outputs.zip ./${{ inputs.location }}/inst/testfiles
+      shell: bash
