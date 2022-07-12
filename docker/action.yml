@@ -1,0 +1,29 @@
+name: 'RcppDeepState'
+author: 'Fabrizio Sandri'
+description: 'This Action runs RcppDeepState inside a Docker container'
+inputs:
+  location:  
+    description: 'Location of the package if not in the root of the repository'
+    required: false
+    default: '/'
+  seed:  
+    description: 'Seed used for deterministic fuzz testing and reproduce the analysis results'
+    required: false
+    default: '-1'
+  time_limit:
+    description: "Fuzzing phase's duration in seconds"
+    required: false
+    default: '2'
+  max_inputs:
+    description: 'Number of inputs generated in the fuzzing phase to analyze'
+    required: false
+    default: '3'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.location }}
+    - ${{ inputs.seed }}
+    - ${{ inputs.time_limit }}
+    - ${{ inputs.max_inputs }}
