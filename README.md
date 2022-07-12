@@ -6,7 +6,10 @@ RcppDeepState is a fuzz testing library made as a composition of three tools: Rc
 * Link to [RcppDeepState](https://github.com/FabrizioSandri/RcppDeepState)
 
 ## Inputs
--   **location** (default value: `/`) - Relative path under `$GITHUB_WORKSPACE` that contains the package that needs to be analyzed. Default uses the `/` location relative to `$GITHUB_WORKSPACE`, that is `$GITHUB_WORKSPACE`.
+-   **location** (default value: `/`) - Relative path under `$GITHUB_WORKSPACE` that contains the package that needs to be analyzed. Default uses the `/` location relative to `$GITHUB_WORKSPACE`, that is `$GITHUB_WORKSPACE`;
+-   **seed** (default value: `-1`) - control the randomness of the inputs generated in the fuzzing phase;
+-   **time_limit** (default value: `5`) - Fuzzing phase's duration in seconds;
+-   **max_inputs** (default value: `3`) - Maximum number of inputs that will be processed by RcppDeepState.
 
 ## Outputs
 
@@ -22,6 +25,25 @@ Before running this GitHub Action it's mandatory to run the [actions/checkout](h
     # analyzed is located.
     # Default: / 
     location: ''
+
+    # Seed value used to control the randomness of the inputs generated in the 
+    # fuzzing phase. This parameter is used to run deterministic fuzz testing 
+    # and reproduce the analysis results over several executions. A value of -1
+    # is used to generate a random value. 
+    # Default: -1
+    seed: ''
+
+    # This parameter controls the fuzzing phase's duration in seconds. 
+    # Default: 5
+    time_limit: ''
+
+    # Maximum number of inputs that will be processed by RcppDeepState. The 
+    # fuzzing phase may generate a lot of inputs, however analyzing all of them
+    # can require a huge amount of time, making this task almost impossible.
+    # Instead by using this parameter it is possible to control the number of 
+    # inputs analyzed by RcppDeepState for each tested function. 
+    # Default: 3
+    max_inputs: ''
 ```
 
 #### Basic example

@@ -2,9 +2,15 @@ require(RcppDeepState)
 
 GitHub_workspace <- Sys.getenv("GITHUB_WORKSPACE")
 location <- Sys.getenv("INPUT_LOCATION")
+seed <- Sys.getenv("INPUT_SEED")
+time_limit <- Sys.getenv("INPUT_TIME_LIMIT")
+max_inputs <- Sys.getenv("INPUT_MAX_INPUTS")
 
-deepstate_harness_compile_run(file.path(GitHub_workspace, location))
-result <- deepstate_harness_analyze_pkg(file.path(GitHub_workspace, location))
+deepstate_harness_compile_run(file.path(GitHub_workspace, location), seed=seed,
+    time.limit.seconds=time_limit)
+
+result <- deepstate_harness_analyze_pkg(file.path(GitHub_workspace, location),
+    max_inputs=max_inputs)
 
 
 # Auxiliary function used to get the number of errors for a single file that has

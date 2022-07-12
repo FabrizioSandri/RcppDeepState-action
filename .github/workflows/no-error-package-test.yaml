@@ -1,11 +1,12 @@
 on:
   push:
-    branches: [exit-codes]
+    branches: 
+      - '*'
   pull_request:
-    branches: [exit-codes]
+    branches: 
+      - '*'
 
-name: check-exit-code
-
+name: check-bugfree-package
 jobs:
   RcppDeepState:
     runs-on: ubuntu-latest
@@ -20,3 +21,5 @@ jobs:
         uses: ./
         with:
           location: /tests/TestPackage
+          time_limit: 5
+          max_inputs: 3
