@@ -2,6 +2,10 @@ name: 'RcppDeepState'
 author: 'Fabrizio Sandri'
 description: 'This Action runs RcppDeepState inside a Docker container'
 inputs:
+  fail_ci_if_error:
+    description: 'Specify if CI pipeline should fail when RcppDeepState finds errors'
+    require: false
+    default: 'false'
   location:  
     description: 'Location of the package if not in the root of the repository'
     required: false
@@ -23,6 +27,7 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
+    - ${{ inputs.fail_ci_if_error }}
     - ${{ inputs.location }}
     - ${{ inputs.seed }}
     - ${{ inputs.time_limit }}

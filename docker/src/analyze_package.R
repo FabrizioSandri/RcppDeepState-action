@@ -5,6 +5,7 @@ location <- Sys.getenv("INPUT_LOCATION")
 seed <- Sys.getenv("INPUT_SEED")
 time_limit <- Sys.getenv("INPUT_TIME_LIMIT")
 max_inputs <- Sys.getenv("INPUT_MAX_INPUTS")
+fail_ci_if_error <- Sys.getenv("INPUT_FAIL_CI_IF_ERROR")
 
 deepstate_harness_compile_run(file.path(GitHub_workspace, location), seed=seed,
     time.limit.seconds=time_limit)
@@ -22,14 +23,16 @@ getErrors <- function(logtableElement){
 }
 
 errors <- sapply(result$logtable,  getErrors)
+status <- 0
 
 # print all the errors and return a proper exit status code
 if (any(errors > 0)){
     print(result)
     print(result$logtable)
 
-    quit(status=1)  # error code
-}else{
-    quit(status=0)  # success
+    if (fail_ci_if_error == "true"){
+        status <- 1
+    }
 }
 
+quit(status=status)  # return an error code

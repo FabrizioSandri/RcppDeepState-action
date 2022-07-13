@@ -2,6 +2,10 @@ name: 'RcppDeepState'
 author: 'Fabrizio Sandri'
 description: 'This Action runs RcppDeepState in any Rcpp-based projects hosted on GitHub'
 inputs:
+  fail_ci_if_error:
+    description: 'Specify if CI pipeline should fail when RcppDeepState finds errors'
+    require: false
+    default: 'false'
   location:  
     description: 'Location of the package if not in the root of the repository'
     required: false
@@ -32,19 +36,21 @@ runs:
     - name: Analyze the package with RcppDeepState 
       uses: ./RcppDeepState-action/docker
       with:
+        fail_ci_if_error: ${{ inputs.fail_ci_if_error }}
         location: ${{ inputs.location }}
         seed: ${{ inputs.seed }}
         time_limit: ${{ inputs.time_limit }}
         max_inputs: ${{ inputs.max_inputs }}
 
     - name: Zip artifact before upload
-      if: failure()
+      if: failure() || inputs.fail_ci_if_error == 'false'
       run: |
         zip -r -q outputs.zip ./${{ inputs.location }}/inst/testfiles
       shell: bash
 
     - uses: actions/upload-artifact@v3
-      if: failure()
+      if: failure() || inputs.fail_ci_if_error == 'false'
       with:
         name: Test results
         path: outputs.zip
+        
