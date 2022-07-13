@@ -22,6 +22,10 @@ inputs:
     description: 'Number of inputs generated in the fuzzing phase to analyze'
     required: false
     default: '3'
+  comment:
+    description: 'Print the analysis results as a comment in pull request'
+    require: false
+    default: 'false'
 
 
 runs:
