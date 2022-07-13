@@ -30,9 +30,21 @@ if (any(errors > 0)){
     print(result)
     print(result$logtable)
 
+    for (i in seq(length(result$logtable))){
+        print(result$logtable[[i]])
+        if (dim(result$logtable[[i]])[1] > 0){
+            inputs <- paste(names(result$inputs[[i]]),result$inputs[[i]], sep=": ")
+            header <- paste0("## Test ", i,"\n#### Inputs\n", inputs, "\n#### Logtable\n")
+            write(header, file.path(GitHub_workspace, "report.md"), append=TRUE)
+            write(knitr::kable(result$logtable[[i]]), file.path(GitHub_workspace, "report.md"), append=TRUE)
+        }
+    }
+
     if (fail_ci_if_error == "true"){
         status <- 1
     }
+}else{
+    write("No error has been reported by RcppDeepState", file.path(GitHub_workspace, "report.md"))
 }
 
 quit(status=status)  # return an error code
