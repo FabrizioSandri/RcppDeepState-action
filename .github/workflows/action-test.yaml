@@ -1,9 +1,11 @@
 on:
   push:
-    branches: [initial-prototype]
+    branches: 
+      - '*'
   pull_request:
-    branches: [initial-prototype]
-
+    branches: 
+      - '*'
+      
 name: RcppDeepState
 
 jobs:
@@ -25,3 +27,6 @@ jobs:
         uses: ./
         with:
           location: /RcppDeepState/inst/testpkgs/testSAN
+          fail_ci_if_error: 'false'
+          comment: 'true'
+          
