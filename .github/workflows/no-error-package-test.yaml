@@ -1,12 +1,9 @@
 on:
   push:
-    branches: 
-      - '*'
-  pull_request:
-    branches: 
-      - '*'
+    branches-ignore:
+      - '**'
 
-name: check-bugfree-package
+name: "Check bug free package"
 jobs:
   RcppDeepState:
     runs-on: ubuntu-latest
