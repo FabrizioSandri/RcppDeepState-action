@@ -57,9 +57,10 @@ if (any(errors)){
         
         file_ref <- gsub(" ", "", first_error_table$logtable[[i]]$file.line[1])
         refs <- unlist(strsplit(file_ref, ":"))
-        file_hyperlink <- paste(GitHub_server_url, GitHub_repository, location, refs[1], sep="/")
+        file_hyperlink <- paste(GitHub_server_url, GitHub_repository, "blob", location, "src", refs[1], sep="/")
         file_hyperlink <- paste0(file_hyperlink, "#L", refs[2])
-        
+        file_hyperlink <- gsub("[/]+", "/", file_hyperlink) # remove concatenations of 2 or more "/
+
         gh_link <- paste0("[",file_ref,"](",file_hyperlink,")")
 
         new_row <- data.table(function_name=first_error_table$func[i], message=first_error_table$logtable[[i]]$message[1], 
