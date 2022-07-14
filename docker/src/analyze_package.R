@@ -9,6 +9,7 @@ max_inputs <- Sys.getenv("INPUT_MAX_INPUTS")
 fail_ci_if_error <- Sys.getenv("INPUT_FAIL_CI_IF_ERROR")
 GitHub_server_url <- Sys.getenv("GITHUB_SERVER_URL")
 GitHub_repository <- Sys.getenv("GITHUB_REPOSITORY")
+GitHub_head_ref <- Sys.getenv("GITHUB_HEAD_REF")
 
 deepstate_harness_compile_run(file.path(GitHub_workspace, location), seed=seed,
     time.limit.seconds=time_limit)
@@ -57,7 +58,7 @@ if (any(errors)){
         
         file_ref <- gsub(" ", "", first_error_table$logtable[[i]]$file.line[1])
         refs <- unlist(strsplit(file_ref, ":"))
-        file_hyperlink <- paste(GitHub_server_url, GitHub_repository, "blob", location, "src", refs[1], sep="/")
+        file_hyperlink <- paste(GitHub_server_url, GitHub_repository, "blob", GitHub_head_ref, location, "src", refs[1], sep="/")
         file_hyperlink <- paste0(file_hyperlink, "#L", refs[2])
         file_hyperlink <- gsub("[/]+", "/", file_hyperlink) # remove concatenations of 2 or more "/
 
