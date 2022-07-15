@@ -6,10 +6,12 @@ RcppDeepState is a fuzz testing library made as a composition of three tools: Rc
 * Link to [RcppDeepState](https://github.com/FabrizioSandri/RcppDeepState)
 
 ## Inputs
+-   **fail_ci_if_error** (default value: `false`) - Specify if CI pipeline should fail when RcppDeepState finds errors;
 -   **location** (default value: `/`) - Relative path under `$GITHUB_WORKSPACE` that contains the package that needs to be analyzed. Default uses the `/` location relative to `$GITHUB_WORKSPACE`, that is `$GITHUB_WORKSPACE`;
 -   **seed** (default value: `-1`) - control the randomness of the inputs generated in the fuzzing phase;
 -   **time_limit** (default value: `5`) - Fuzzing phase's duration in seconds;
--   **max_inputs** (default value: `3`) - Maximum number of inputs that will be processed by RcppDeepState.
+-   **max_inputs** (default value: `3`) - Maximum number of inputs that will be processed by RcppDeepState;
+-   **comment** (default value: `false`) - Print the analysis results as a comment if run in a pull request.
 
 ## Outputs
 
@@ -21,6 +23,12 @@ Before running this GitHub Action it's mandatory to run the [actions/checkout](h
 
 - uses: FabrizioSandri/RcppDeepState-action
   with:
+
+    # This parameter is used to specify if the CI pipeline should fail when 
+    # RcppDeepState finds at least one error.
+    # Default: 'false'
+    fail_ci_if_error: ''
+
     # Relative path under $GITHUB_WORKSPACE where the package that needs to be
     # analyzed is located.
     # Default: / 
@@ -44,6 +52,11 @@ Before running this GitHub Action it's mandatory to run the [actions/checkout](h
     # inputs analyzed by RcppDeepState for each tested function. 
     # Default: 3
     max_inputs: ''
+
+    # If this action is used inside a pull request's pipeline, this parameter
+    # enables print the analysis results as a comment in the pull request. 
+    # Default: 'false'
+    comment: ''
 ```
 
 #### Basic example
