@@ -54,7 +54,8 @@ Before running this GitHub Action it's mandatory to run the [actions/checkout](h
     max_inputs: ''
 
     # If this action is used inside a pull request's pipeline, this parameter
-    # enables print the analysis results as a comment in the pull request. 
+    # control wether the analysis result should be printed as a comment in the 
+    # pull request. 
     # Default: 'false'
     comment: ''
 ```

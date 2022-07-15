@@ -23,13 +23,12 @@ result <- deepstate_harness_analyze_pkg(file.path(GitHub_workspace, location),
 # where the second dimension describes the number of columns, whereas the second 
 # describes the number of errors found.
 getErrors <- function(logtableElement){
-    return (dim(logtableElement)[1]>0)
+    dim(logtableElement)[1]>0
 }
 
 getFunctionName <- function(test_path){
     analyzed_fun <- unlist(strsplit(test_path, "/"))
     analyzed_fun <- analyzed_fun[length(analyzed_fun)-2]
-    return(analyzed_fun)
 }
 
 # helper function that returns the Github link (in markdown format) for a given
@@ -55,7 +54,7 @@ getInputsMarkdown <- function(inputList){
         markdown_res <- paste0(markdown_res,value,"</details>")
     }
 
-    return(markdown_res)
+    markdown_res
 }
 
 errors <- sapply(result$logtable,  getErrors)
