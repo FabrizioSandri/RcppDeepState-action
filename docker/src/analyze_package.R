@@ -32,6 +32,19 @@ getFunctionName <- function(test_path){
     return(analyzed_fun)
 }
 
+# helper function that returns the Github link (in markdown format) for a given
+# input file.
+getHyperlink <- function(analyzed_file){
+    file_ref <- gsub(" ", "", analyzed_file)
+    refs <- unlist(strsplit(file_ref, ":"))
+    file_hyperlink <- paste(GitHub_repository, "blob", GitHub_head_ref, location, "src", refs[1], sep="/")
+    file_hyperlink <- paste0(file_hyperlink, "#L", refs[2])
+    file_hyperlink <- gsub("[/]+", "/", file_hyperlink) # remove concatenations of 2 or more "/"
+    file_hyperlink <- paste(GitHub_server_url, file_hyperlink, sep="/")
+
+    gh_link <- paste0("[",file_ref,"](",file_hyperlink,")")
+}
+
 errors <- sapply(result$logtable,  getErrors)
 status <- 0
 
@@ -56,17 +69,14 @@ if (any(errors)){
     report_table <- data.table(function_name=c(), message=c(), file_line=c(), address_trace=c())
     for (i in seq(dim(first_error_table)[1])){
         
-        file_ref <- gsub(" ", "", first_error_table$logtable[[i]]$file.line[1])
-        refs <- unlist(strsplit(file_ref, ":"))
-        file_hyperlink <- paste(GitHub_repository, "blob", GitHub_head_ref, location, "src", refs[1], sep="/")
-        file_hyperlink <- paste0(file_hyperlink, "#L", refs[2])
-        file_hyperlink <- gsub("[/]+", "/", file_hyperlink) # remove concatenations of 2 or more "/"
-        file_hyperlink <- paste(GitHub_server_url, file_hyperlink, sep="/")
-
-        gh_link <- paste0("[",file_ref,"](",file_hyperlink,")")
+        file_line_link <- getHyperlink(first_error_table$logtable[[i]]$file.line[1])
+        address_trace_link <- first_error_table$logtable[[i]]$address.trace[1]
+        if (address_trace_link != "No Address Trace found"){
+            address_trace_link <- getHyperlink(address_trace_link)
+        }
 
         new_row <- data.table(function_name=first_error_table$func[i], message=first_error_table$logtable[[i]]$message[1], 
-                            file_line=gh_link, address_trace=first_error_table$logtable[[i]]$address.trace[1])
+                            file_line=file_line_link, address_trace=address_trace_link)
         report_table <- rbind(report_table, new_row)
     }
 
