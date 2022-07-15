@@ -45,6 +45,19 @@ getHyperlink <- function(analyzed_file){
     gh_link <- paste0("[",file_ref,"](",file_hyperlink,")")
 }
 
+# this function generates a markdown version of an input list
+getInputsMarkdown <- function(inputList){
+    markdown_res <- ""
+    for (i in seq(length(inputList))){
+        name <- names(inputList)[i]
+        value <- inputList[i]
+        markdown_res <- paste0(markdown_res,"<details><summary>",name,"</summary>")
+        markdown_res <- paste0(markdown_res,value,"</details>")
+    }
+
+    return(markdown_res)
+}
+
 errors <- sapply(result$logtable,  getErrors)
 status <- 0
 
@@ -75,8 +88,10 @@ if (any(errors)){
             address_trace_link <- getHyperlink(address_trace_link)
         }
 
-        new_row <- data.table(function_name=first_error_table$func[i], message=first_error_table$logtable[[i]]$message[1], 
-                            file_line=file_line_link, address_trace=address_trace_link)
+        inputs_markdown <- getInputsMarkdown(first_error_table$inputs[[i]])
+
+        new_row <- data.table(function_name=first_error_table$func[i], inputs=inputs_markdown, 
+            message=first_error_table$logtable[[i]]$message[1], file_line=file_line_link, address_trace=address_trace_link)
         report_table <- rbind(report_table, new_row)
     }
 
