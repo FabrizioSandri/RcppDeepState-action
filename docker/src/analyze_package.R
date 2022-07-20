@@ -11,11 +11,22 @@ GitHub_server_url <- Sys.getenv("GITHUB_SERVER_URL")
 GitHub_repository <- Sys.getenv("GITHUB_REPOSITORY")
 GitHub_head_ref <- Sys.getenv("GITHUB_HEAD_REF")
 
-deepstate_harness_compile_run(file.path(GitHub_workspace, location), seed=seed,
-    time.limit.seconds=time_limit)
 
-result <- deepstate_harness_analyze_pkg(file.path(GitHub_workspace, location),
-    max_inputs=max_inputs)
+package_root <- file.path(GitHub_workspace, location)
+description_file <- file.path(package_root, "DESCRIPTION")
+if (!file.exists(description_file)){
+    message(paste0("ERROR: ", location, " doesn't contain a valid package with a DESCRIPTION file"))
+    exit(1)
+}
+
+# parse the DESCRIPTION file in order to get the package name
+description_lines <- readLines(description_file)
+package_name <- description_lines[grepl('^Package:', description_lines)]
+package_name <- gsub("Package: ", "", package_name[1])
+
+# analyze with RcppDeepState
+deepstate_harness_compile_run(package_root, seed=seed, time.limit.seconds=time_limit)
+result <- deepstate_harness_analyze_pkg(package_root, max_inputs=max_inputs)
 
 
 # Auxiliary function used to get the errors positions for a single file that has
@@ -57,6 +68,15 @@ getInputsMarkdown <- function(inputList){
     markdown_res
 }
 
+# helper function that generates the code for a test given the inputs
+getExecutableFile <- function(inputs, function_name){
+    markdown_res <- paste0("<details><summary>Test code</summary>")
+    inputList <- capture.output(dput(inputs))
+    executable_file <- paste0("testlist <- ", inputList, "<br/>")
+    executable_file <- paste0(executable_file, "result <- do.call(", package_name, "::", function_name,",testlist)")
+    markdown_res <- paste0(markdown_res, "<pre>", executable_file, "</pre>","</details>")
+}
+
 errors <- sapply(result$logtable,  getErrors)
 status <- 0
 
@@ -88,9 +108,11 @@ if (any(errors)){
         }
 
         inputs_markdown <- getInputsMarkdown(first_error_table$inputs[[i]])
+        executable_file <- getExecutableFile(first_error_table$inputs[[i]], first_error_table$func[i])
 
         new_row <- data.table(function_name=first_error_table$func[i], inputs=inputs_markdown, 
-            message=first_error_table$logtable[[i]]$message[1], file_line=file_line_link, address_trace=address_trace_link)
+            message=first_error_table$logtable[[i]]$message[1], file_line=file_line_link, 
+            address_trace=address_trace_link, R_code=executable_file)
         report_table <- rbind(report_table, new_row)
     }
 
