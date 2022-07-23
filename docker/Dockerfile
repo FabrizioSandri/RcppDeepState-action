@@ -4,8 +4,11 @@ FROM ubuntu:latest
 RUN ln -snf /usr/share/zoneinfo/$INPUT_ZONEINFO /etc/localtime && echo $INPUT_ZONEINFO > /etc/timezone
 
 RUN apt update
-RUN apt install -y build-essential gcc-multilib g++-multilib cmake python3-setuptools python3-dev libffi-dev clang valgrind libcurl4-gnutls-dev libxml2-dev libssl-dev wget
-RUN apt install -y r-base
+RUN apt install -y build-essential gcc-multilib g++-multilib cmake \
+                   python3-setuptools python3-dev libffi-dev clang valgrind \
+                   libcurl4-gnutls-dev libxml2-dev libssl-dev wget \
+                   libfontconfig1-dev libharfbuzz-dev libfribidi-dev \
+                   libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev r-base
 
 # Copy the files to the root filesystem of the container
 COPY src/entrypoint.sh /entrypoint.sh
