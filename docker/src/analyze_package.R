@@ -101,8 +101,9 @@ if (any(errors)) {
   first_error_table <- error_table[,.SD[1], by=func]
 
   # generate the report file
-  report_table <- data.table(function_name=c(), message=c(), file_line=c(), 
-                             address_trace=c())
+  report_table <- data.table(function_name=c(), message=c(), inputs=c(), 
+                             file_line=c(), address_trace=c(), R_code=c())
+                             
   for (i in seq(dim(first_error_table)[1])) {
     
     file_line_link <- getHyperlink(first_error_table$logtable[[i]]$file.line[1])
