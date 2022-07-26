@@ -2,6 +2,10 @@ name: 'RcppDeepState'
 author: 'Fabrizio Sandri'
 description: 'This Action runs RcppDeepState in any Rcpp-based projects hosted on GitHub'
 inputs:
+  fail_ci_if_error:
+    description: 'Specify if CI pipeline should fail when RcppDeepState finds errors'
+    require: false
+    default: 'false'
   location:  
     description: 'Location of the package if not in the root of the repository'
     required: false
@@ -18,13 +22,54 @@ inputs:
     description: 'Number of inputs generated in the fuzzing phase to analyze'
     required: false
     default: '3'
+  comment:
+    description: 'Print the analysis results as a comment in pull request'
+    require: false
+    default: 'false'
 
 
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
-  args:
-    - ${{ inputs.location }}
-    - ${{ inputs.seed }}
-    - ${{ inputs.time_limit }}
-    - ${{ inputs.max_inputs }}
+  using: "composite"
+  steps:
+
+    - uses: actions/checkout@v2 
+      with:
+        repository: FabrizioSandri/RcppDeepState-action
+        path: RcppDeepState-action
+
+    - name: Analyze the package with RcppDeepState 
+      uses: ./RcppDeepState-action/docker
+      with:
+        fail_ci_if_error: ${{ inputs.fail_ci_if_error }}
+        location: ${{ inputs.location }}
+        seed: ${{ inputs.seed }}
+        time_limit: ${{ inputs.time_limit }}
+        max_inputs: ${{ inputs.max_inputs }}
+
+    - name: Zip artifact before upload
+      if: failure() || inputs.fail_ci_if_error == 'false'
+      run: |
+        zip -r -q outputs.zip ./${{ inputs.location }}/inst/testfiles
+      shell: bash
+
+    - uses: actions/upload-artifact@v3
+      if: failure() || inputs.fail_ci_if_error == 'false'
+      with:
+        name: Test results
+        path: outputs.zip
+
+    - name: Comment on pull requests
+      uses: actions/github-script@v6
+      if: inputs.comment == 'true'
+      with:
+        script: |
+          const fs = require("fs");
+          const report = fs.readFileSync('./report.md', {encoding:'utf8', flag:'r'});
+          if (context.issue.number){
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: report
+            })
+          }
