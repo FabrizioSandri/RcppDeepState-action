@@ -1,6 +1,6 @@
 on:
   push:
-    branches-ignore:
+    branches-ignore:  # disable this workflow
       - '**'
 
 name: "Check bug free package"
