@@ -11,7 +11,7 @@ RcppDeepState is a fuzz testing library made as a composition of three tools: Rc
 -   **seed** (default value: `-1`) - control the randomness of the inputs generated in the fuzzing phase;
 -   **time_limit** (default value: `5`) - Fuzzing phase's duration in seconds;
 -   **max_inputs** (default value: `3`) - Maximum number of inputs that will be processed by RcppDeepState;
--   **comment** (default value: `false`) - Print the analysis results as a comment if run in a pull request.
+-   **comment** (default value: `false`) - Print the analysis results as a comment if run in a pull request. If set to `failure` only writes a comment if RcppDeepState discovers at least one issue. 
 
 ## Outputs
 
@@ -54,8 +54,9 @@ Before running this GitHub Action it's mandatory to run the [actions/checkout](h
     max_inputs: ''
 
     # If this action is used inside a pull request's pipeline, this parameter
-    # control wether the analysis result should be printed as a comment in the 
-    # pull request. 
+    # control whether the analysis result should be printed as a comment in the 
+    # pull request. This parameter can be set to 'failure' to write comments
+    # only if RcppDeepState discovers at least one issue.  
     # Default: 'false'
     comment: ''
 ```
