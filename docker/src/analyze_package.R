@@ -132,7 +132,19 @@ if (any(errors)) {
     status <- 1
   }
 }else{
-  write("No error has been reported by RcppDeepState", report_file)
+  # get all the analyzed functions name
+  analyzed_functions <- unlist(lapply(result$binaryfile, getFunctionName))
+  analyzed_table <- cbind(data.table(func=analyzed_functions),result)
+  colnames(analyzed_table)[1] <- "function_name"
+
+  # this table contains for each function analyzed, the number of inputs tested 
+  count_inputs <- analyzed_table[,.N, by=function_name]
+  colnames(count_inputs)[2] <- "tested_inputs"
+  
+  no_error_message <- paste("No error has been reported by RcppDeepState",
+                            "### Analyzed functions summary", sep="\n")
+  write(no_error_message, report_file)
+  write(knitr::kable(count_inputs), report_file, append=TRUE)
 }
 
 quit(status=status)  # return an error code
