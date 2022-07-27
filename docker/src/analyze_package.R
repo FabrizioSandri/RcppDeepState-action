@@ -88,6 +88,8 @@ if (any(errors)) {
   print(result)
   print(result$logtable)
 
+  output_errors <- paste0("echo ::set-output name=errors::true")
+  system(output_errors, intern = FALSE)
 
   # extract only the error lines
   error_table <- result[errors]
@@ -132,6 +134,9 @@ if (any(errors)) {
     status <- 1
   }
 }else{
+  output_errors <- paste0("echo ::set-output name=errors::false")
+  system(output_errors, intern = FALSE)
+
   # get all the analyzed functions name
   analyzed_functions <- unlist(lapply(result$binaryfile, getFunctionName))
   analyzed_table <- cbind(data.table(func=analyzed_functions),result)
