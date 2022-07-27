@@ -18,5 +18,5 @@ jobs:
         uses: ./
         with:
           location: /tests/TestPackage
-          time_limit: 5
-          max_inputs: 3
+          fail_ci_if_error: 'false'
+          comment: 'true'
