@@ -19,4 +19,4 @@ jobs:
         with:
           location: /tests/TestPackage
           fail_ci_if_error: 'false'
-          comment: 'true'
+          comment: 'failure'
