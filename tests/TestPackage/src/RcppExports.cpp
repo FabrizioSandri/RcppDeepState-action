@@ -10,6 +10,30 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// multiplication
+int multiplication(int arg1, int arg2);
+RcppExport SEXP _TestPackage_multiplication(SEXP arg1SEXP, SEXP arg2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type arg1(arg1SEXP);
+    Rcpp::traits::input_parameter< int >::type arg2(arg2SEXP);
+    rcpp_result_gen = Rcpp::wrap(multiplication(arg1, arg2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// difference
+int difference(int arg1, int arg2);
+RcppExport SEXP _TestPackage_difference(SEXP arg1SEXP, SEXP arg2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type arg1(arg1SEXP);
+    Rcpp::traits::input_parameter< int >::type arg2(arg2SEXP);
+    rcpp_result_gen = Rcpp::wrap(difference(arg1, arg2));
+    return rcpp_result_gen;
+END_RCPP
+}
 // sum
 int sum(int arg1, int arg2);
 RcppExport SEXP _TestPackage_sum(SEXP arg1SEXP, SEXP arg2SEXP) {
@@ -24,6 +48,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_TestPackage_multiplication", (DL_FUNC) &_TestPackage_multiplication, 2},
+    {"_TestPackage_difference", (DL_FUNC) &_TestPackage_difference, 2},
     {"_TestPackage_sum", (DL_FUNC) &_TestPackage_sum, 2},
     {NULL, NULL, 0}
 };
