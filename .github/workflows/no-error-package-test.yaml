@@ -1,7 +1,7 @@
 on:
-  push:
-    branches-ignore:  # disable this workflow
-      - '**'
+  pull_request:
+    branches: 
+      - '*'
 
 name: "Check bug free package"
 jobs:
