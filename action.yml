@@ -61,7 +61,12 @@ runs:
 
     - name: Comment on pull requests
       uses: actions/github-script@v6
-      if: inputs.comment == 'true' || ( inputs.comment == 'failure' && steps.rcppdeepstate.outputs.errors == 'true')
+      if: |
+        always() && ( 
+          inputs.comment == 'true' || ( 
+            inputs.comment == 'failure' && steps.rcppdeepstate.outputs.errors == 'true'
+          ) 
+        )
       with:
         script: |
           if (context.issue.number) {
