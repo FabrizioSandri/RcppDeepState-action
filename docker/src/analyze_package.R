@@ -49,11 +49,13 @@ getFunctionName <- function(test_path) {
 getHyperlink <- function(analyzed_file) {
   file_ref <- gsub(" ", "", analyzed_file)
   refs <- unlist(strsplit(file_ref, ":"))
-  file_hyperlink <- paste(GitHub_server_url, GitHub_repository, "blob", 
-                          GitHub_head_ref, location, "src", refs[1], sep="/")
-  line_hyperlink <- gsub("[/]+", "/", paste0(file_hyperlink, "#L", refs[2]))
 
-  gh_link <- paste0("[",file_ref,"](",line_hyperlink,")")
+  file_hyperlink <- paste(GitHub_repository, "blob", GitHub_head_ref, location,
+                          "src", refs[1], sep="/")
+  line_hyperlink <- gsub("[/]+", "/", paste0(file_hyperlink, "#L", refs[2]))
+  final_hyperlink <- paste(GitHub_server_url, line_hyperlink, sep="/")
+
+  gh_link <- paste0("[",file_ref,"](",final_hyperlink,")")
 }
 
 # this function generates a markdown version of an input list
@@ -71,7 +73,7 @@ getInputsMarkdown <- function(inputList) {
 
 # helper function that generates the code for a test given the inputs
 getExecutableFile <- function(inputs, function_name) {
-  inputList <- capture.output(dput(inputs))
+  inputList <- paste(capture.output(dput(inputs)), collapse="")
   executable_file <- paste0("testlist <- ", inputList, "<br/>", 
                             "result <- do.call(", package_name, "::", 
                             function_name, ", testlist)")
@@ -103,8 +105,8 @@ if (any(errors)) {
   first_error_table <- error_table[,.SD[1], by=func]
 
   # generate the report file
-  report_table <- data.table(function_name=c(), message=c(), inputs=c(), 
-                             file_line=c(), address_trace=c(), R_code=c())
+  report_table <- data.table(function_name=c(), message=c(), file_line=c(), 
+                             address_trace=c(), R_code=c())
                              
   for (i in seq(dim(first_error_table)[1])) {
     
@@ -115,14 +117,11 @@ if (any(errors)) {
     }
 
     message <- first_error_table$logtable[[i]]$message[1]
-
-    inputs_markdown <- getInputsMarkdown(first_error_table$inputs[[i]])
     executable_file <- getExecutableFile(first_error_table$inputs[[i]], 
                                          first_error_table$func[i])
 
-    new_row <- data.table(function_name=first_error_table$func[i], 
-                          inputs=inputs_markdown, message=message, 
-                          file_line=file_line_link, 
+    new_row <- data.table(function_name=first_error_table$func[i],
+                          message=message, file_line=file_line_link, 
                           address_trace=address_trace_link, 
                           R_code=executable_file)
     report_table <- rbind(report_table, new_row)
