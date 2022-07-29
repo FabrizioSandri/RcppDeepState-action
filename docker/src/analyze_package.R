@@ -103,8 +103,8 @@ if (any(errors)) {
   first_error_table <- error_table[,.SD[1], by=func]
 
   # generate the report file
-  report_table <- data.table(function_name=c(), message=c(), inputs=c(), 
-                             file_line=c(), address_trace=c(), R_code=c())
+  report_table <- data.table(function_name=c(), message=c(), file_line=c(), 
+                             address_trace=c(), R_code=c())
                              
   for (i in seq(dim(first_error_table)[1])) {
     
@@ -115,14 +115,11 @@ if (any(errors)) {
     }
 
     message <- first_error_table$logtable[[i]]$message[1]
-
-    inputs_markdown <- getInputsMarkdown(first_error_table$inputs[[i]])
     executable_file <- getExecutableFile(first_error_table$inputs[[i]], 
                                          first_error_table$func[i])
 
-    new_row <- data.table(function_name=first_error_table$func[i], 
-                          inputs=inputs_markdown, message=message, 
-                          file_line=file_line_link, 
+    new_row <- data.table(function_name=first_error_table$func[i],
+                          message=message, file_line=file_line_link, 
                           address_trace=address_trace_link, 
                           R_code=executable_file)
     report_table <- rbind(report_table, new_row)
