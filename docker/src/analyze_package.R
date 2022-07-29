@@ -71,7 +71,7 @@ getInputsMarkdown <- function(inputList) {
 
 # helper function that generates the code for a test given the inputs
 getExecutableFile <- function(inputs, function_name) {
-  inputList <- capture.output(dput(inputs))
+  inputList <- paste(capture.output(dput(inputs)), collapse="")
   executable_file <- paste0("testlist <- ", inputList, "<br/>", 
                             "result <- do.call(", package_name, "::", 
                             function_name, ", testlist)")
