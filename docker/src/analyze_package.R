@@ -49,11 +49,13 @@ getFunctionName <- function(test_path) {
 getHyperlink <- function(analyzed_file) {
   file_ref <- gsub(" ", "", analyzed_file)
   refs <- unlist(strsplit(file_ref, ":"))
-  file_hyperlink <- paste(GitHub_server_url, GitHub_repository, "blob", 
-                          GitHub_head_ref, location, "src", refs[1], sep="/")
-  line_hyperlink <- gsub("[/]+", "/", paste0(file_hyperlink, "#L", refs[2]))
 
-  gh_link <- paste0("[",file_ref,"](",line_hyperlink,")")
+  file_hyperlink <- paste(GitHub_repository, "blob", GitHub_head_ref, location,
+                          "src", refs[1], sep="/")
+  line_hyperlink <- gsub("[/]+", "/", paste0(file_hyperlink, "#L", refs[2]))
+  final_hyperlink <- paste(GitHub_server_url, line_hyperlink, sep="/")
+
+  gh_link <- paste0("[",file_ref,"](",final_hyperlink,")")
 }
 
 # this function generates a markdown version of an input list
