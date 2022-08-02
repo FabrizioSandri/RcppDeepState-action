@@ -26,6 +26,10 @@ inputs:
     description: 'Print the analysis results as a comment in pull request'
     require: false
     default: 'false'
+  verbose:
+    description: 'Enables verbose logging of RcppDeepState'
+    require: false
+    default: 'false'
 
 
 runs:
@@ -46,6 +50,7 @@ runs:
         seed: ${{ inputs.seed }}
         time_limit: ${{ inputs.time_limit }}
         max_inputs: ${{ inputs.max_inputs }}
+        verbose: ${{ inputs.verbose }}
 
     - name: Zip artifact before upload
       if: failure() || inputs.fail_ci_if_error == 'false'

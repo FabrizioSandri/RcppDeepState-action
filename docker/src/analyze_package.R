@@ -6,6 +6,7 @@ location <- Sys.getenv("INPUT_LOCATION")
 seed <- Sys.getenv("INPUT_SEED")
 time_limit <- Sys.getenv("INPUT_TIME_LIMIT")
 max_inputs <- Sys.getenv("INPUT_MAX_INPUTS")
+verbose <- if (Sys.getenv("INPUT_VERBOSE") == "true") TRUE else FALSE
 fail_ci_if_error <- Sys.getenv("INPUT_FAIL_CI_IF_ERROR")
 GitHub_server_url <- Sys.getenv("GITHUB_SERVER_URL")
 GitHub_repository <- Sys.getenv("GITHUB_REPOSITORY")
@@ -26,9 +27,10 @@ package_name_line <- description_lines[grepl("^Package:", description_lines)]
 package_name <- gsub("Package: ", "", package_name_line[1])
 
 # analyze with RcppDeepState
-deepstate_harness_compile_run(package_root, seed=seed, 
+deepstate_harness_compile_run(package_root, seed=seed, verbose=verbose, 
                               time.limit.seconds=time_limit)
-result <- deepstate_harness_analyze_pkg(package_root, max_inputs=max_inputs)
+result <- deepstate_harness_analyze_pkg(package_root, max_inputs=max_inputs, 
+                                        verbose=verbose)
 
 
 # Auxiliary function used to get the errors positions for a single file that has
