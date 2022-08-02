@@ -17,6 +17,10 @@ RcppDeepState is a fuzz testing library made as a composition of three tools: Rc
 ## Outputs
 
 ## Usage
+There are two ways to initialize this action inside a repository:
+1. Create a workflow file manually in the `.github/workflows` folder using the model shown below; 
+2. Automatically generate the workflow files using the `ci_setup` function of RcppDeepState
+
 Before running this GitHub Action it's mandatory to run the [actions/checkout](https://github.com/actions/checkout) Action to check-out the repository containing the Rcpp package that needs to be analyzed. Remember that you must specify the parameter `location` for this action if you use the `path` argument for `actions/checkout` or if the package that has to be analyzed isn't located in the root of the repository, otherwise RcppDeepState won't be able to find your package.
 
 ```yaml
