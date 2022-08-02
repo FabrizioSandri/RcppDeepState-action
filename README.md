@@ -69,20 +69,82 @@ Before running this GitHub Action it's mandatory to run the [actions/checkout](h
 ```
 
 #### Basic example
-This simple workflow can be run inside a repository containing a Rcpp-based package, stored in the root of the repository. 
+This simple workflow can be run inside a repository containing a Rcpp-based package, stored in the root of the repository. Once a push events is triggered inside a pull request this workflow will be run and a comment with the analysis report will be added to the pull request. 
 ```yaml
-- uses: actions/checkout@v2
+on:
+  pull_request:
+    branches: 
+      - '*'
 
-- uses: FabrizioSandri/RcppDeepState-action
+name: "Analyze package with RcppDeepState"
+
+jobs:
+  RcppDeepState:
+    runs-on: ubuntu-latest
+    
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      
+    steps:      
+      - uses: actions/checkout@v2 
+
+      - uses:  FabrizioSandri/RcppDeepState-action@main
+        with:
+          comment: 'true'
 ```
 
 #### Custom path example
 Assume the package you wish to test is not at the repository's root, but rather, for instance, in the `/inst/testpkgs/testSAN` subdirectory. In this case, the package can be analyzed specifying the `location` parameter. 
 
 ```yaml
-- uses: actions/checkout@v2
+on:
+  pull_request:
+    branches: 
+      - '*'
 
-- uses: FabrizioSandri/RcppDeepState-action
-  with:
-    location: '/inst/testpkgs/testSAN'
+name: "Analyze package with RcppDeepState"
+
+jobs:
+  RcppDeepState:
+    runs-on: ubuntu-latest
+    
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      
+    steps:      
+      - uses: actions/checkout@v2 
+
+      - uses:  FabrizioSandri/RcppDeepState-action@main
+        with:
+          location: '/inst/testpkgs/testSAN'
+          comment: 'true'
+```
+
+#### CI fail example
+If you want to make the RcppDeepState workflow fail if at least one error is found you have to set the `fail_ci_if_error` parameter to `true`. In this manner, if an error is found, the workflow will fail and an a :x: symbol will be displayed.
+
+The example in the next lines of code executes RcppDeepState on a package that is saved at the root of the repository, and if at least one problem is discovered, the workflow fails. 
+
+```yaml
+on:
+  pull_request:
+    branches: 
+      - '*'
+
+name: "Analyze package with RcppDeepState"
+
+jobs:
+  RcppDeepState:
+    runs-on: ubuntu-latest
+    
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      
+    steps:      
+      - uses: actions/checkout@v2 
+
+      - uses:  FabrizioSandri/RcppDeepState-action@main
+        with:
+          fail_ci_if_error: 'true'
+          comment: 'true'
 ```
