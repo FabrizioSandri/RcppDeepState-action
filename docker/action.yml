@@ -22,6 +22,10 @@ inputs:
     description: 'Number of inputs generated in the fuzzing phase to analyze'
     required: false
     default: '3'
+  verbose:
+    description: 'Enables verbose logging of RcppDeepState'
+    require: false
+    default: 'false'
 
 runs:
   using: 'docker'
@@ -32,3 +36,4 @@ runs:
     - ${{ inputs.seed }}
     - ${{ inputs.time_limit }}
     - ${{ inputs.max_inputs }}
+    - ${{ inputs.verbose }}
