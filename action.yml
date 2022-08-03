@@ -36,14 +36,9 @@ runs:
   using: "composite"
   steps:
 
-    - uses: actions/checkout@v2 
-      with:
-        repository: FabrizioSandri/RcppDeepState-action
-        path: RcppDeepState-action
-
     - name: Analyze the package with RcppDeepState 
       id: rcppdeepstate
-      uses: ./RcppDeepState-action/docker
+      uses: docker://fabriziosandri/rcppdeepstate:latest
       with:
         fail_ci_if_error: ${{ inputs.fail_ci_if_error }}
         location: ${{ inputs.location }}
