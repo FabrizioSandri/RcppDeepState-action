@@ -3,6 +3,7 @@ FROM ubuntu:latest
 # setup zoneinfo
 RUN ln -snf /usr/share/zoneinfo/$INPUT_ZONEINFO /etc/localtime && echo $INPUT_ZONEINFO > /etc/timezone
 
+### Dependencies installation
 RUN apt update
 RUN apt install -y build-essential gcc-multilib g++-multilib cmake \
                    python3-setuptools python3-dev libffi-dev clang valgrind \
