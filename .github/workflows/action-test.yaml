@@ -1,7 +1,7 @@
 on:
-  pull_request:
-    branches: 
-      - '*'
+  push:
+    branches-ignore:  # disable this workflow
+      - '**'
 
 name: "Check testSAN package"
 
