@@ -10,6 +10,9 @@ RUN apt install -y build-essential gcc-multilib g++-multilib cmake \
                    libfontconfig1-dev libharfbuzz-dev libfribidi-dev \
                    libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev r-base
 
+RUN Rscript -e 'install.packages("devtools", repos="https://cloud.r-project.org")'
+RUN Rscript -e 'devtools::install_github("FabrizioSandri/RcppDeepState")'
+
 # Copy the files to the root filesystem of the container
 COPY src/entrypoint.sh /entrypoint.sh
 COPY src/analyze_package.R /analyze_package.R
