@@ -13,7 +13,7 @@ retVal=$?
 echo "RcppDeepState analysis completed"
 
 # remove vgcore files and adjust permissions
-find ./inst/testfiles -maxdepth 2 -name 'vgcore*' | xargs rm
+find "$GITHUB_WORKSPACE/$INPUT_LOCATION/inst/testfiles" -maxdepth 2 -name 'vgcore*' | xargs rm
 
 find "$GITHUB_WORKSPACE/$INPUT_LOCATION/inst/testfiles" -type d -exec chmod 755 {} \;
 find "$GITHUB_WORKSPACE/$INPUT_LOCATION/inst/testfiles" -type f -exec chmod 644 {} \;
