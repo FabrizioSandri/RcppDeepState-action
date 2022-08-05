@@ -87,6 +87,11 @@ report_file <- file.path(GitHub_workspace, "report.md")
 errors <- sapply(result$logtable,  getErrors)
 status <- 0
 
+rcppdeepstate_repo <- "https://github.com/FabrizioSandri/RcppDeepState"
+title <- paste0("## [RcppDeepState](", rcppdeepstate_repo, ") Report")
+write(title, report_file)
+
+
 # print all the errors and return a proper exit status code
 if (any(errors)) {
   print(result)
@@ -129,7 +134,7 @@ if (any(errors)) {
     report_table <- rbind(report_table, new_row)
   }
 
-  write(knitr::kable(report_table), report_file)
+  write(knitr::kable(report_table), report_file, append=TRUE)
 
   if (fail_ci_if_error == "true") {
     status <- 1
@@ -138,19 +143,21 @@ if (any(errors)) {
   output_errors <- paste0("echo ::set-output name=errors::false")
   system(output_errors, intern = FALSE)
 
-  # get all the analyzed functions name
-  analyzed_functions <- unlist(lapply(result$binaryfile, getFunctionName))
-  analyzed_table <- cbind(data.table(func=analyzed_functions),result)
-  colnames(analyzed_table)[1] <- "function_name"
-
-  # this table contains for each function analyzed, the number of inputs tested 
-  count_inputs <- analyzed_table[,.N, by=function_name]
-  colnames(count_inputs)[2] <- "tested_inputs"
-  
-  no_error_message <- paste("No error has been reported by RcppDeepState",
-                            "### Analyzed functions summary", sep="\n")
-  write(no_error_message, report_file)
-  write(knitr::kable(count_inputs), report_file, append=TRUE)
+  no_error_message <- "No error has been reported by RcppDeepState"
+  write(no_error_message, report_file, append=TRUE)
 }
+
+# print the summary table: this table contains for each function analyzed, the 
+# number of inputs tested 
+analyzed_functions <- unlist(lapply(result$binaryfile, getFunctionName))
+analyzed_table <- cbind(data.table(func=analyzed_functions),result)
+colnames(analyzed_table)[1] <- "function_name"
+
+count_inputs <- analyzed_table[,.N, by=function_name]
+colnames(count_inputs)[2] <- "tested_inputs"
+
+summary_header <- "### Analyzed functions summary"
+write(summary_header, report_file, append=TRUE)
+write(knitr::kable(count_inputs), report_file, append=TRUE)
 
 quit(status=status)  # return an error code
