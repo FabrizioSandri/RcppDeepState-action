@@ -83,6 +83,21 @@ getExecutableFile <- function(inputs, function_name) {
                          "<pre>", executable_file, "</pre>", "</details>")
 }
 
+# This function generates a markdown table given a data.table using less 
+# character as possible(avoiding unnecessary spacing)
+generateMarkdownTable <- function(table) {
+  header <- paste0("|", paste(colnames(table), collapse="|"), "|")
+  line_sep <- paste(rep("|", length(colnames(table)) + 1), collapse="-")
+
+  markdown_table <- paste(header, line_sep, sep="\n")
+  for (row_i in seq(nrow(table))){
+    markdown_row <- paste0("|", paste(table[row_i], collapse="|"), "|")
+    markdown_table <- paste(markdown_table, markdown_row, sep="\n")
+  }
+
+  markdown_table
+}
+
 report_file <- file.path(GitHub_workspace, "report.md")
 errors <- sapply(result$logtable,  getErrors)
 status <- 0
