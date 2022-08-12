@@ -109,6 +109,7 @@ generateMarkdownTable <- function(table, max_len) {
 
   for (row_i in seq(nrow(table))) {
     markdown_row <- paste0("|", paste(table[row_i], collapse="|"), "|")
+    markdown_row <- gsub("\n", "", markdown_row)
     if (nchar(markdown_row) < remaining) {
       markdown_table <- paste(markdown_table, markdown_row, sep="\n")
       remaining <- remaining - nchar(markdown_row) 
