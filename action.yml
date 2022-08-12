@@ -58,6 +58,7 @@ runs:
       with:
         name: Test results
         path: outputs.zip
+        if-no-files-found: ignore
 
     - name: Comment on pull requests
       uses: actions/github-script@v6
