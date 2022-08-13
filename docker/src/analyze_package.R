@@ -85,7 +85,7 @@ getInputsMarkdown <- function(inputList) {
 getExecutableFile <- function(inputs, function_name) {
   inputList <- paste(capture.output(dput(inputs)), collapse="")
   executable_file <- paste0("testlist <- ", inputList, "<br/>",
-                            "result <- do.call(", package_name, "::",
+                            "result <- do.call(", package_name, ":::",
                             function_name, ", testlist)")
   markdown_res <- paste0("<details>", "<summary>", "Test code", "</summary>",
                          "<pre>", executable_file, "</pre>", "</details>")
