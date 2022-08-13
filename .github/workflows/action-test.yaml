@@ -15,6 +15,11 @@ jobs:
     steps:      
       - uses: actions/checkout@v2 
 
+      - name: Switch to test image
+        run: |
+          sed -i "s/fabriziosandri\/rcppdeepstate:latest/fabriziosandri\/rcppdeepstate:dev/g" action.yml
+        shell: bash
+
       - name: Analyze the package with RcppDeepState  # run RccpDeepState on 'testSAN'
         uses: ./
         with:
