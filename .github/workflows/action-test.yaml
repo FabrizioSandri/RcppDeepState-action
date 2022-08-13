@@ -17,7 +17,7 @@ jobs:
 
       - name: Switch to test image
         run: |
-          sed -i "s/fabriziosandri\/rcppdeepstate:latest/fabriziosandri\/rcppdeepstate:dev/g" action.yml
+          sed -i "s/fabriziosandri\/rcppdeepstate:latest/fabriziosandri\/rcppdeepstate:devel/g" action.yml
         shell: bash
 
       - name: Analyze the package with RcppDeepState  # run RccpDeepState on 'testSAN'
