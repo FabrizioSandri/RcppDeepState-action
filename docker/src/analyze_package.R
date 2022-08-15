@@ -17,14 +17,13 @@ GitHub_head_ref <- Sys.getenv("GITHUB_HEAD_REF")
 # comment identifier(used to identify the comment when updating), the title
 # and for the message that will be printed if the message is truncated.
 max_comment_size <- 65000
-
 report_file <- file.path(GitHub_workspace, "report.md") 
 status <- 0 # default exit code status is 0 (success)
 
 package_root <- file.path(GitHub_workspace, location)
 description_file <- file.path(package_root, "DESCRIPTION")
 if (!file.exists(description_file)) {
-  message(paste0("ERROR: ", location, " doesn't contain a valid package with a",
+  message(paste("ERROR:", location, "doesn't contain a valid package with a",
                  "DESCRIPTION file"))
   exit(1)
 }
