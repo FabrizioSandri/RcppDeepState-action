@@ -26,4 +26,4 @@ jobs:
         with:
           context: ./docker
           push: true
-          tags: fabriziosandri/rcppdeepstate:latest
+          tags: fabriziosandri/rcppdeepstate:${{ github.ref_name == 'main' && 'latest' || 'devel' }}
