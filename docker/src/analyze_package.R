@@ -18,6 +18,7 @@ GitHub_head_ref <- Sys.getenv("GITHUB_HEAD_REF")
 # and for the message that will be printed if the message is truncated.
 max_comment_size <- 65000
 report_file <- file.path(GitHub_workspace, "report.md") 
+truncated_file <- file.path(GitHub_workspace, "truncated.md") 
 status <- 0 # default exit code status is 0 (success)
 
 package_root <- file.path(GitHub_workspace, location)
@@ -121,6 +122,9 @@ generateMarkdownTable <- function(table, max_len) {
     markdown_table <- paste(markdown_table, truncated_msg, sep="\n\n")
     output_truncated <- paste0("echo ::set-output name=truncated::true")
     system(output_truncated, intern = FALSE)
+
+    # save the full table
+    write(knitr::kable(table), truncated_file, append=TRUE)
   }
 
   markdown_table
