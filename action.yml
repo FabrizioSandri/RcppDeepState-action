@@ -58,6 +58,14 @@ runs:
       with:
         name: Test results
         path: outputs.zip
+        if-no-files-found: ignore
+
+    - uses: actions/upload-artifact@v3
+      if: always() && steps.rcppdeepstate.outputs.truncated == 'true'
+      with:
+        name: Truncated comment
+        path: truncated.md
+        if-no-files-found: ignore
 
     - name: Comment on pull requests
       uses: actions/github-script@v6
