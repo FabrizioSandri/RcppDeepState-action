@@ -150,9 +150,10 @@ analyzed_table <- cbind(data.table(func=analyzed_functions), result)
 colnames(analyzed_table)[1] <- "function_name"
 
 # Generate the summary table: contains for each function analyzed, the number of 
-# inputs tested
+# inputs tested and the number of inputs which caused at least one valgrind 
+# message/issue
 summary_table <- analyzed_table[,.(tested_inputs=.N, 
-                            errors=getErrorsCount(logtable)), by=function_name]
+                 inputs_with_issues=getErrorsCount(logtable)), by=function_name]
 
 summary_header <- "### Analyzed functions summary"
 summary_table_md <- generateMarkdownTable(summary_table, max_comment_size)
