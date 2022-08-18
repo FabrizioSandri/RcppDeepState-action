@@ -111,8 +111,9 @@ generateMarkdownTable <- function(table, max_len) {
                          "markdown table in the artifact file associated to",
                          "this workflow run.")
 
-  header <- paste0("|", paste(colnames(table), collapse="|"), "|")
-  line_sep <- paste(rep("|", length(colnames(table)) + 1), collapse="-")
+  column_names <- gsub("_"," ",colnames(table), fixed=TRUE)
+  header <- paste0("|", paste(column_names, collapse="|"), "|")
+  line_sep <- paste(rep("|", length(column_names) + 1), collapse="-")
   markdown_table <- paste(header, line_sep, sep="\n")
 
   remaining <- max_len - nchar(markdown_table)
