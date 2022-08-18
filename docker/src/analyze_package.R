@@ -14,7 +14,7 @@ GitHub_head_ref <- Sys.getenv("GITHUB_HEAD_REF")
 
 pull_sha <- Sys.getenv("PULL_SHA")
 short_sha <- strtrim(pull_sha, 7)
-seed <- if (seed_input != -1) seed_input else as.numeric(Sys.time())
+seed <- if (seed_input != -1) seed_input else as.integer(Sys.time())
 
 # Here is the maximum GitHub's comment length. The original size is 65536,
 # however we consider that the remaining 536 characters are reserved for the
