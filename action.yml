@@ -36,6 +36,12 @@ runs:
   using: "composite"
   steps:
 
+    - name: Get the pull request SHA
+      run: |
+        PULL_SHA="${{ github.event.pull_request.head.sha }}"
+        echo "PULL_SHA=${PULL_SHA}" >> $GITHUB_ENV
+      shell: bash
+
     - name: Analyze the package with RcppDeepState 
       id: rcppdeepstate
       uses: docker://fabriziosandri/rcppdeepstate:latest
