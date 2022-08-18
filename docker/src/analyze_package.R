@@ -3,7 +3,7 @@ require(data.table)
 
 GitHub_workspace <- Sys.getenv("GITHUB_WORKSPACE")
 location <- Sys.getenv("INPUT_LOCATION")
-seed <- Sys.getenv("INPUT_SEED")
+seed_input <- Sys.getenv("INPUT_SEED")
 time_limit <- Sys.getenv("INPUT_TIME_LIMIT")
 max_inputs <- Sys.getenv("INPUT_MAX_INPUTS")
 verbose <- if (Sys.getenv("INPUT_VERBOSE") == "true") TRUE else FALSE
@@ -11,6 +11,10 @@ fail_ci_if_error <- Sys.getenv("INPUT_FAIL_CI_IF_ERROR")
 GitHub_server_url <- Sys.getenv("GITHUB_SERVER_URL")
 GitHub_repository <- Sys.getenv("GITHUB_REPOSITORY")
 GitHub_head_ref <- Sys.getenv("GITHUB_HEAD_REF")
+
+pull_sha <- Sys.getenv("PULL_SHA")
+short_sha <- strtrim(pull_sha, 7)
+seed <- if (seed_input != -1) seed_input else as.integer(Sys.time())
 
 # Here is the maximum GitHub's comment length. The original size is 65536,
 # however we consider that the remaining 536 characters are reserved for the
@@ -49,6 +53,12 @@ getErrors <- function(logtableElement) {
   dim(logtableElement)[1]>0
 }
 
+# Auxiliary function used to get the number of inputs that generated errors for
+# a given batch of analysis results
+getErrorsCount <- function(batch){
+	sum(lapply(batch, nrow) > 0)
+}
+
 getFunctionName <- function(test_path) {
   test_location <- unlist(strsplit(test_path, "/"))
   analyzed_fun <- test_location[length(test_location)-2]
@@ -60,8 +70,8 @@ getHyperlink <- function(analyzed_file) {
   file_ref <- gsub(" ", "", analyzed_file)
   refs <- unlist(strsplit(file_ref, ":"))
 
-  file_hyperlink <- paste(GitHub_repository, "blob", GitHub_head_ref, location,
-                          "src", refs[1], sep="/")
+  file_hyperlink <- paste(GitHub_repository, "blob", pull_sha, location, "src", 
+                          refs[1], sep="/")
   line_hyperlink <- gsub("[/]+", "/", paste0(file_hyperlink, "#L", refs[2]))
   final_hyperlink <- paste(GitHub_server_url, line_hyperlink, sep="/")
 
@@ -101,8 +111,9 @@ generateMarkdownTable <- function(table, max_len) {
                          "markdown table in the artifact file associated to",
                          "this workflow run.")
 
-  header <- paste0("|", paste(colnames(table), collapse="|"), "|")
-  line_sep <- paste(rep("|", length(colnames(table)) + 1), collapse="-")
+  column_names <- gsub("_"," ",colnames(table), fixed=TRUE)
+  header <- paste0("|", paste(column_names, collapse="|"), "|")
+  line_sep <- paste(rep("|", length(column_names) + 1), collapse="-")
   markdown_table <- paste(header, line_sep, sep="\n")
 
   remaining <- max_len - nchar(markdown_table)
@@ -133,40 +144,37 @@ generateMarkdownTable <- function(table, max_len) {
 rcppdeepstate_repo <- "https://github.com/FabrizioSandri/RcppDeepState"
 write_to_report <- paste0("## [RcppDeepState](", rcppdeepstate_repo, ") Report")
 
-# Generate the summary table: contains for each function analyzed, the number of 
-# inputs tested
+# add a column containing the name of the function analyzed
 analyzed_functions <- unlist(lapply(result$binaryfile, getFunctionName))
-analyzed_table <- cbind(data.table(func=analyzed_functions),result)
+analyzed_table <- cbind(data.table(func=analyzed_functions), result)
 colnames(analyzed_table)[1] <- "function_name"
 
-count_inputs <- analyzed_table[,.N, by=function_name]
-colnames(count_inputs)[2] <- "tested_inputs"
+# Generate the summary table: contains for each function analyzed, the number of 
+# inputs tested and the number of inputs which caused at least one valgrind 
+# message/issue
+summary_table <- analyzed_table[,.(tested_inputs=.N, 
+                 inputs_with_issues=getErrorsCount(logtable)), by=function_name]
 
 summary_header <- "### Analyzed functions summary"
-summary_table <- generateMarkdownTable(count_inputs, max_comment_size)
-summary_table_md <- paste(summary_header, summary_table, sep="\n")
+summary_table_md <- generateMarkdownTable(summary_table, max_comment_size)
+summary_md <- paste(summary_header, summary_table_md, sep="\n")
 
-max_comment_size <- max_comment_size - nchar(summary_table_md)
+max_comment_size <- max_comment_size - nchar(summary_md)
 
 # print all the errors and return a proper exit status code
-errors <- sapply(result$logtable,  getErrors)
+errors <- sapply(analyzed_table$logtable,  getErrors)
 if (any(errors)) {
-  print(result)
-  print(result$logtable)
+  print(analyzed_table)
+  print(analyzed_table$logtable)
 
   output_errors <- paste0("echo ::set-output name=errors::true")
   system(output_errors, intern = FALSE)
 
   # extract only the error lines
-  error_table <- result[errors]
-
-  # add a column containing the name of the function analyzed
-  function_names <- unlist(lapply(error_table$binaryfile, getFunctionName))
-  error_table <- cbind(data.table(func=function_names),error_table)
-  colnames(error_table)[1] <- "func"
+  error_table <- analyzed_table[errors]
 
   # extract the first error for each function
-  first_error_table <- error_table[,.SD[1], by=func]
+  first_error_table <- error_table[,.SD[1], by=function_name]
 
   # generate the report file
   report_table <- data.table(function_name=c(), message=c(), file_line=c(),
@@ -182,9 +190,9 @@ if (any(errors)) {
 
     message <- first_error_table$logtable[[i]]$message[1]
     executable_file <- getExecutableFile(first_error_table$inputs[[i]],
-                                         first_error_table$func[i])
+                                         first_error_table$function_name[i])
 
-    new_row <- data.table(function_name=first_error_table$func[i],
+    new_row <- data.table(function_name=first_error_table$function_name[i],
                           message=message, file_line=file_line_link,
                           address_trace=address_trace_link,
                           R_code=executable_file)
@@ -205,8 +213,14 @@ if (any(errors)) {
   write_to_report <- paste(write_to_report, no_error_message, sep="\n")
 }
 
-write_to_report <- paste(write_to_report, summary_table_md, sep="\n")
-write(write_to_report, report_file, append=FALSE)
+write_to_report <- paste(write_to_report, summary_md, sep="\n")
 
-# return an error code
-quit(status=status)
+# Add to the report the list of parameters used to run the test
+commit_sha_md <- paste("Report generated by:", short_sha)
+seed_md <- paste("Inputs generator seed:", seed)
+parameters_list <- paste("### Report details", commit_sha_md, seed_md,  
+                         sep="\n* ")
+write_to_report <- paste(write_to_report, parameters_list, sep="\n")
+
+write(write_to_report, report_file, append=FALSE)
+quit(status=status) # return an error code
