@@ -32,7 +32,7 @@ Before running this GitHub Action it's mandatory to run the [actions/checkout](h
 
     # This parameter is used to specify if the CI pipeline should fail when 
     # RcppDeepState finds at least one error.
-    # Default: 'false'
+    # Default: false
     fail_ci_if_error: ''
 
     # Relative path under $GITHUB_WORKSPACE where the package that needs to be
@@ -63,13 +63,13 @@ Before running this GitHub Action it's mandatory to run the [actions/checkout](h
     # control whether the analysis result should be printed as a comment in the 
     # pull request. This parameter can be set to 'failure' to write comments
     # only if RcppDeepState discovers at least one issue.  
-    # Default: 'false'
+    # Default: false
     comment: ''
     
     # This parameter enables the verbose logging mode of RcppDeepState. If set 
     # to 'true' RcppDeepState will print more debugging information. If set to
     # 'false' only the analysis result will be printed on the standard output.
-    # Default: 'false'
+    # Default: false
     verbose: ''
 ```
 
@@ -95,7 +95,7 @@ jobs:
 
       - uses:  FabrizioSandri/RcppDeepState-action@main
         with:
-          comment: 'true'
+          comment: true
 ```
 
 #### Custom path example
@@ -121,8 +121,8 @@ jobs:
 
       - uses:  FabrizioSandri/RcppDeepState-action@main
         with:
-          location: '/inst/testpkgs/testSAN'
-          comment: 'true'
+          location: /inst/testpkgs/testSAN
+          comment: true
 ```
 
 #### CI fail example
@@ -150,6 +150,6 @@ jobs:
 
       - uses:  FabrizioSandri/RcppDeepState-action@main
         with:
-          fail_ci_if_error: 'true'
-          comment: 'true'
+          fail_ci_if_error: true
+          comment: true
 ```
