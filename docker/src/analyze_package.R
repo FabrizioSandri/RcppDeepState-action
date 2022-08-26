@@ -56,7 +56,7 @@ getErrors <- function(logtableElement) {
 # Auxiliary function used to get the number of inputs that generated errors for
 # a given batch of analysis results
 getErrorsCount <- function(batch){
-	sum(lapply(batch, nrow) > 0)
+	sum(unlist(lapply(batch, nrow)) > 0, na.rm = TRUE)
 }
 
 getFunctionName <- function(test_path) {
