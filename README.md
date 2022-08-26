@@ -10,7 +10,7 @@ RcppDeepState is a fuzz testing library made as a composition of three tools: Rc
 -   **fail_ci_if_error** (default value: `false`) - Specify if CI pipeline should fail when RcppDeepState finds errors;
 -   **location** (default value: `/`) - Relative path under `$GITHUB_WORKSPACE` that contains the package that needs to be analyzed. Default uses the `/` location relative to `$GITHUB_WORKSPACE`, that is `$GITHUB_WORKSPACE`;
 -   **seed** (default value: `-1`) - control the randomness of the inputs generated in the fuzzing phase;
--   **time_limit** (default value: `5`) - Fuzzing phase's duration in seconds;
+-   **time_limit_seconds** (default value: `5`) - Fuzzing phase's duration in seconds;
 -   **max_inputs** (default value: `3`) - Maximum number of inputs that will be processed by RcppDeepState;
 -   **comment** (default value: `false`) - Print the analysis results as a comment if run in a pull request. If set to `failure` only writes a comment if RcppDeepState discovers at least one issue;
 -   **verbose** (default value: `false`) - Enables verbose logging of RcppDeepState.
@@ -49,7 +49,7 @@ Before running this GitHub Action it's mandatory to run the [actions/checkout](h
 
     # This parameter controls the fuzzing phase's duration in seconds. 
     # Default: 5
-    time_limit: ''
+    time_limit_seconds: ''
 
     # Maximum number of inputs that will be processed by RcppDeepState. The 
     # fuzzing phase may generate a lot of inputs, however analyzing all of them
