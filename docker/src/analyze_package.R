@@ -4,7 +4,7 @@ require(data.table)
 GitHub_workspace <- Sys.getenv("GITHUB_WORKSPACE")
 location <- Sys.getenv("INPUT_LOCATION")
 seed_input <- Sys.getenv("INPUT_SEED")
-time_limit_seconds <- Sys.getenv("INPUT_TIME_LIMIT_SECONDS")
+max_seconds_per_function <- Sys.getenv("INPUT_MAX_SECONDS_PER_FUNCTION")
 max_inputs <- Sys.getenv("INPUT_MAX_INPUTS")
 verbose <- if (Sys.getenv("INPUT_VERBOSE") == "true") TRUE else FALSE
 fail_ci_if_error <- Sys.getenv("INPUT_FAIL_CI_IF_ERROR")
@@ -40,7 +40,7 @@ package_name <- gsub("Package: ", "", package_name_line[1])
 
 # analyze with RcppDeepState
 deepstate_harness_compile_run(package_root, seed=seed, verbose=verbose,
-                              time.limit.seconds=time_limit_seconds)
+                              time.limit.seconds=max_seconds_per_function)
 result <- deepstate_harness_analyze_pkg(package_root, max_inputs=max_inputs,
                                         verbose=verbose)
 
