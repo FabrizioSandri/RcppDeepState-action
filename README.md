@@ -10,7 +10,7 @@ RcppDeepState is a fuzz testing library made as a composition of three tools: Rc
 -   **fail_ci_if_error** (default value: `false`) - Specify if CI pipeline should fail when RcppDeepState finds errors;
 -   **location** (default value: `/`) - Relative path under `$GITHUB_WORKSPACE` that contains the package that needs to be analyzed. Default uses the `/` location relative to `$GITHUB_WORKSPACE`, that is `$GITHUB_WORKSPACE`;
 -   **seed** (default value: `-1`) - control the randomness of the inputs generated in the fuzzing phase;
--   **time_limit** (default value: `5`) - Fuzzing phase's duration in seconds;
+-   **max_seconds_per_function** (default value: `5`) - Fuzzing phase's duration in seconds for every function;
 -   **max_inputs** (default value: `3`) - Maximum number of inputs that will be processed by RcppDeepState;
 -   **comment** (default value: `false`) - Print the analysis results as a comment if run in a pull request. If set to `failure` only writes a comment if RcppDeepState discovers at least one issue;
 -   **verbose** (default value: `false`) - Enables verbose logging of RcppDeepState.
@@ -32,7 +32,7 @@ Before running this GitHub Action it's mandatory to run the [actions/checkout](h
 
     # This parameter is used to specify if the CI pipeline should fail when 
     # RcppDeepState finds at least one error.
-    # Default: 'false'
+    # Default: false
     fail_ci_if_error: ''
 
     # Relative path under $GITHUB_WORKSPACE where the package that needs to be
@@ -49,7 +49,7 @@ Before running this GitHub Action it's mandatory to run the [actions/checkout](h
 
     # This parameter controls the fuzzing phase's duration in seconds. 
     # Default: 5
-    time_limit: ''
+    max_seconds_per_function: ''
 
     # Maximum number of inputs that will be processed by RcppDeepState. The 
     # fuzzing phase may generate a lot of inputs, however analyzing all of them
@@ -63,13 +63,13 @@ Before running this GitHub Action it's mandatory to run the [actions/checkout](h
     # control whether the analysis result should be printed as a comment in the 
     # pull request. This parameter can be set to 'failure' to write comments
     # only if RcppDeepState discovers at least one issue.  
-    # Default: 'false'
+    # Default: false
     comment: ''
     
     # This parameter enables the verbose logging mode of RcppDeepState. If set 
     # to 'true' RcppDeepState will print more debugging information. If set to
     # 'false' only the analysis result will be printed on the standard output.
-    # Default: 'false'
+    # Default: false
     verbose: ''
 ```
 
@@ -95,7 +95,7 @@ jobs:
 
       - uses:  FabrizioSandri/RcppDeepState-action@main
         with:
-          comment: 'true'
+          comment: true
 ```
 
 #### Custom path example
@@ -121,8 +121,8 @@ jobs:
 
       - uses:  FabrizioSandri/RcppDeepState-action@main
         with:
-          location: '/inst/testpkgs/testSAN'
-          comment: 'true'
+          location: /inst/testpkgs/testSAN
+          comment: true
 ```
 
 #### CI fail example
@@ -150,6 +150,6 @@ jobs:
 
       - uses:  FabrizioSandri/RcppDeepState-action@main
         with:
-          fail_ci_if_error: 'true'
-          comment: 'true'
+          fail_ci_if_error: true
+          comment: true
 ```

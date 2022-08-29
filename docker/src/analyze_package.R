@@ -4,7 +4,7 @@ require(data.table)
 GitHub_workspace <- Sys.getenv("GITHUB_WORKSPACE")
 location <- Sys.getenv("INPUT_LOCATION")
 seed_input <- Sys.getenv("INPUT_SEED")
-time_limit <- Sys.getenv("INPUT_TIME_LIMIT")
+max_seconds_per_function <- Sys.getenv("INPUT_MAX_SECONDS_PER_FUNCTION")
 max_inputs <- Sys.getenv("INPUT_MAX_INPUTS")
 verbose <- if (Sys.getenv("INPUT_VERBOSE") == "true") TRUE else FALSE
 fail_ci_if_error <- Sys.getenv("INPUT_FAIL_CI_IF_ERROR")
@@ -40,7 +40,7 @@ package_name <- gsub("Package: ", "", package_name_line[1])
 
 # analyze with RcppDeepState
 deepstate_harness_compile_run(package_root, seed=seed, verbose=verbose,
-                              time.limit.seconds=time_limit)
+                              time.limit.seconds=max_seconds_per_function)
 result <- deepstate_harness_analyze_pkg(package_root, max_inputs=max_inputs,
                                         verbose=verbose)
 
@@ -50,13 +50,13 @@ result <- deepstate_harness_analyze_pkg(package_root, max_inputs=max_inputs,
 # where the second dimension describes the number of columns, whereas the second
 # describes the number of errors found.
 getErrors <- function(logtableElement) {
-  dim(logtableElement)[1]>0
+  if (!is.data.table(logtableElement)) FALSE else dim(logtableElement)[1]>0
 }
 
 # Auxiliary function used to get the number of inputs that generated errors for
 # a given batch of analysis results
 getErrorsCount <- function(batch){
-	sum(unlist(sapply(batch, nrow)) > 0, na.rm = TRUE)
+  sum(unlist(sapply(batch, nrow)) > 0, na.rm = TRUE)
 }
 
 getFunctionName <- function(test_path) {
@@ -67,7 +67,7 @@ getFunctionName <- function(test_path) {
 # helper function that returns the Github link (in markdown format) for a given
 # input file.
 getHyperlink <- function(analyzed_file) {
-  file_ref <- gsub(" ", "", analyzed_file)
+  file_ref <- basename(gsub(" ", "", analyzed_file))
   refs <- unlist(strsplit(file_ref, ":"))
 
   file_hyperlink <- paste(GitHub_repository, "blob", pull_sha, location, "src", 
@@ -181,9 +181,12 @@ if (any(errors)) {
                              address_trace=c(), R_code=c())
   
   for (i in seq(dim(first_error_table)[1])) {
+    file_line <- first_error_table$logtable[[i]]$file.line[1]
+    file_line_link <- if (is.na(file_line)) "-" else getHyperlink(file_line)
     
-    file_line_link <- getHyperlink(first_error_table$logtable[[i]]$file.line[1])
-    address_trace_link <- first_error_table$logtable[[i]]$address.trace[1]
+    address_trace <- first_error_table$logtable[[i]]$address.trace[1]
+    address_trace_link <- if (is.na(address_trace)) "No Address Trace found" 
+                          else address_trace    
     if (address_trace_link != "No Address Trace found") {
       address_trace_link <- getHyperlink(address_trace_link)
     }

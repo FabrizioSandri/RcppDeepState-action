@@ -14,7 +14,7 @@ inputs:
     description: 'Seed used for deterministic fuzz testing and reproduce the analysis results'
     required: false
     default: '-1'
-  time_limit:
+  max_seconds_per_function:
     description: "Fuzzing phase's duration in seconds"
     required: false
     default: '2'
@@ -49,7 +49,7 @@ runs:
         fail_ci_if_error: ${{ inputs.fail_ci_if_error }}
         location: ${{ inputs.location }}
         seed: ${{ inputs.seed }}
-        time_limit: ${{ inputs.time_limit }}
+        max_seconds_per_function: ${{ inputs.max_seconds_per_function }}
         max_inputs: ${{ inputs.max_inputs }}
         verbose: ${{ inputs.verbose }}
 
