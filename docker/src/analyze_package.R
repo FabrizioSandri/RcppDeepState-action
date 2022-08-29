@@ -181,8 +181,9 @@ if (any(errors)) {
                              address_trace=c(), R_code=c())
   
   for (i in seq(dim(first_error_table)[1])) {
+    file_line <- first_error_table$logtable[[i]]$file.line[1]
+    file_line_link <- if (is.na(file_line)) "-" else getHyperlink(file_line)
     
-    file_line_link <- getHyperlink(first_error_table$logtable[[i]]$file.line[1])
     address_trace_link <- first_error_table$logtable[[i]]$address.trace[1]
     if (is.na(address_trace_link)){
       address_trace_link <- "No Address Trace found"
