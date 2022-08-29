@@ -184,6 +184,10 @@ if (any(errors)) {
     
     file_line_link <- getHyperlink(first_error_table$logtable[[i]]$file.line[1])
     address_trace_link <- first_error_table$logtable[[i]]$address.trace[1]
+    if (is.na(address_trace_link)){
+      address_trace_link <- "No Address Trace found"
+    }
+    
     if (address_trace_link != "No Address Trace found") {
       address_trace_link <- getHyperlink(address_trace_link)
     }
