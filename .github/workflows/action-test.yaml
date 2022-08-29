@@ -26,7 +26,7 @@ jobs:
           location: /tests/testSAN
           fail_ci_if_error: false
           seed: 5
-          time_limit_seconds: 2
+          max_seconds_per_function: 2
           max_inputs: 3
           comment: true
           verbose: true
