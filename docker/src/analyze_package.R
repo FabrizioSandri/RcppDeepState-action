@@ -67,7 +67,7 @@ getFunctionName <- function(test_path) {
 # helper function that returns the Github link (in markdown format) for a given
 # input file.
 getHyperlink <- function(analyzed_file) {
-  file_ref <- gsub(" ", "", analyzed_file)
+  file_ref <- basename(gsub(" ", "", analyzed_file))
   refs <- unlist(strsplit(file_ref, ":"))
 
   file_hyperlink <- paste(GitHub_repository, "blob", pull_sha, location, "src", 
