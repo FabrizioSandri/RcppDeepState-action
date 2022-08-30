@@ -34,7 +34,7 @@ if (!file.exists(description_file)) {
 }
 
 # install the package with devtools
-devtools::install(pkg=package_root)
+devtools::install(pkg=package_root, upgrade="always")
 
 # parse the DESCRIPTION file in order to get the package name
 description_lines <- readLines(description_file)
