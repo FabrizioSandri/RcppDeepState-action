@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# install extra dependencies
+if [ -z $INPUT_ADDITIONAL_DEPENDENCIES ]; then
+  echo "No extra dependency provided."
+else
+  echo "Installing extra dependencies: ${INPUT_ADDITIONAL_DEPENDENCIES} "
+  apt install -y $INPUT_ADDITIONAL_DEPENDENCIES
+fi
+
 # disable optimization options
 mkdir -p ~/.R
 echo -e "CXXFLAGS = \nCXX11FLAGS = \nCXX14FLAGS = \nCXX17FLAGS = \nCXX20FLAGS = \n" > ~/.R/Makevars
