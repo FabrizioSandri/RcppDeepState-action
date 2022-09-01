@@ -10,6 +10,10 @@ inputs:
     description: 'Location of the package if not in the root of the repository'
     required: false
     default: '/'
+  additional_dependencies:
+    description: 'A string containing a list of extra dependencies that the testing system requires, separated by spaces'
+    require: false
+    default: ''
   seed:  
     description: 'Seed used for deterministic fuzz testing and reproduce the analysis results'
     required: false
@@ -33,6 +37,7 @@ runs:
   args:
     - ${{ inputs.fail_ci_if_error }}
     - ${{ inputs.location }}
+    - ${{ inputs.additional_dependencies }}
     - ${{ inputs.seed }}
     - ${{ inputs.max_seconds_per_function }}
     - ${{ inputs.max_inputs }}
