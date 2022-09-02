@@ -9,6 +9,7 @@ RcppDeepState is a fuzz testing library made as a composition of three tools: Rc
 ## Inputs
 -   **fail_ci_if_error** (default value: `false`) - Specify if CI pipeline should fail when RcppDeepState finds errors;
 -   **location** (default value: `/`) - Relative path under `$GITHUB_WORKSPACE` that contains the package that needs to be analyzed. Default uses the `/` location relative to `$GITHUB_WORKSPACE`, that is `$GITHUB_WORKSPACE`;
+-   **additional_dependencies** (default value: ``) - A string containing a list of extra system dependencies that the testing system requires, separated by spaces. Leave empty if no extra dependency is needed;
 -   **seed** (default value: `-1`) - control the randomness of the inputs generated in the fuzzing phase;
 -   **max_seconds_per_function** (default value: `5`) - Fuzzing phase's duration in seconds for every function;
 -   **max_inputs** (default value: `3`) - Maximum number of inputs that will be processed by RcppDeepState;
@@ -39,6 +40,13 @@ Before running this GitHub Action it's mandatory to run the [actions/checkout](h
     # analyzed is located.
     # Default: / 
     location: ''
+
+    # A string containing a list of additional dependencies required by the
+    # package being tested. If there are multiple dependencies, simply put them 
+    # one after the other, separated by an empty space. These dependencies
+    # will be installed using the 'apt install' command.
+    # Default: ''
+    additional_dependencies: ''
 
     # Seed value used to control the randomness of the inputs generated in the 
     # fuzzing phase. This parameter is used to run deterministic fuzz testing 
@@ -151,5 +159,35 @@ jobs:
       - uses:  FabrizioSandri/RcppDeepState-action@main
         with:
           fail_ci_if_error: true
+          comment: true
+```
+
+#### Install extra dependencies
+If your package requires a certain system dependency to function properly, you may add it to the `additional_dependencies` argument.
+
+The following code sample uses RcppDeepState on the TreeSearch package, which is accessible on CRAN and GitHub. This package requires `libgsl-dev` to function properly. This additional requirement may be supplied as a parameter to the action as follows: 
+
+```yaml
+on:
+  pull_request:
+    branches: 
+      - '*'
+
+name: "Analyze package with RcppDeepState"
+
+jobs:
+  RcppDeepState:
+    runs-on: ubuntu-latest
+    
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      
+    steps:      
+      - uses: actions/checkout@v2 
+
+      - uses:  FabrizioSandri/RcppDeepState-action@main
+        with:
+          fail_ci_if_error: true
+          additional_dependencies: libgsl-dev
           comment: true
 ```

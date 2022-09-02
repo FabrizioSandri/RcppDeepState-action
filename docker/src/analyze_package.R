@@ -33,6 +33,9 @@ if (!file.exists(description_file)) {
   exit(1)
 }
 
+# install the package with devtools
+devtools::install(pkg=package_root, upgrade="always")
+
 # parse the DESCRIPTION file in order to get the package name
 description_lines <- readLines(description_file)
 package_name_line <- description_lines[grepl("^Package:", description_lines)]
