@@ -1,12 +1,14 @@
 #!/bin/bash
 
 # install extra dependencies
+echo "::group::System dependencies setup"
 if [ -z $INPUT_ADDITIONAL_DEPENDENCIES ]; then
   echo "No extra dependency provided."
 else
   echo "Installing extra dependencies: ${INPUT_ADDITIONAL_DEPENDENCIES} "
   apt install -y $INPUT_ADDITIONAL_DEPENDENCIES
 fi
+echo "::endgroup::"
 
 # disable optimization options
 mkdir -p ~/.R

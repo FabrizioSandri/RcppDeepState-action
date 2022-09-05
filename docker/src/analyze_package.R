@@ -33,21 +33,24 @@ if (!file.exists(description_file)) {
   exit(1)
 }
 
-# install the package with devtools
-devtools::install(pkg=package_root, upgrade="always")
-
 # parse the DESCRIPTION file in order to get the package name
 description_lines <- readLines(description_file)
 package_name_line <- description_lines[grepl("^Package:", description_lines)]
 package_name <- gsub("Package: ", "", package_name_line[1])
 
+# install the package with devtools
+cat(paste("::group::", package_name, "installation\n"))
+devtools::install(pkg=package_root, upgrade="always")
+cat("::endgroup::\n")
+
 # analyze with RcppDeepState
+cat("::group::RcppDeepState analysis steps\n")
 print("Analyzing the package with RcppDeepState...")
 deepstate_harness_compile_run(package_root, seed=seed, verbose=verbose,
                               time.limit.seconds=max_seconds_per_function)
 result <- deepstate_harness_analyze_pkg(package_root, max_inputs=max_inputs,
                                         verbose=verbose)
-
+cat("::endgroup::\n")
 
 # Auxiliary function used to get the errors positions for a single file that has
 # been analyzed. Each "logtableElement" correspond to a "data.table" instance
@@ -164,7 +167,7 @@ summary_table_md <- generateMarkdownTable(summary_table, max_comment_size)
 summary_md <- paste(summary_header, summary_table_md, sep="\n")
 
 max_comment_size <- max_comment_size - nchar(summary_md)
-print("### RcppDeepState Report")
+cat("############### RcppDeepState Report\n")
 
 # print all the errors and return a proper exit status code
 errors <- sapply(analyzed_table$logtable,  getErrors)
@@ -230,7 +233,7 @@ seed_md <- paste("Inputs generator seed:", seed)
 parameters_list <- paste("### Report details", commit_sha_md, seed_md,  
                          sep="\n* ")
 write_to_report <- paste(write_to_report, parameters_list, sep="\n")
-print("### Analyzed functions summary")
+cat("############### Analyzed functions summary\n")
 print(knitr::kable(summary_table))
 
 write(write_to_report, report_file, append=FALSE)
