@@ -1,24 +1,22 @@
 #!/bin/bash
 
 # install extra dependencies
+echo "::group::System dependencies setup"
 if [ -z $INPUT_ADDITIONAL_DEPENDENCIES ]; then
   echo "No extra dependency provided."
 else
   echo "Installing extra dependencies: ${INPUT_ADDITIONAL_DEPENDENCIES} "
   apt install -y $INPUT_ADDITIONAL_DEPENDENCIES
 fi
+echo "::endgroup::"
 
 # disable optimization options
 mkdir -p ~/.R
 echo -e "CXXFLAGS = \nCXX11FLAGS = \nCXX14FLAGS = \nCXX17FLAGS = \nCXX20FLAGS = \n" > ~/.R/Makevars
 
 ### Start the analysis
-echo "RcppDeepState analysis started..."
-
 Rscript "/analyze_package.R"
 retVal=$?
-
-echo "RcppDeepState analysis completed"
 
 # remove vgcore files and adjust permissions
 find "$GITHUB_WORKSPACE/$INPUT_LOCATION/inst/testfiles" -maxdepth 2 -name 'vgcore*' | xargs -r rm
