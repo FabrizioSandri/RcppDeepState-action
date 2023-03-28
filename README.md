@@ -16,8 +16,6 @@ RcppDeepState is a fuzz testing library made as a composition of three tools: Rc
 -   **comment** (default value: `false`) - Print the analysis results as a comment if run in a pull request. If set to `failure` only writes a comment if RcppDeepState discovers at least one issue;
 -   **verbose** (default value: `false`) - Enables verbose logging of RcppDeepState.
 
-## Outputs
-
 ## Usage
 There are two ways to initialize this action inside a repository:
 1. Create a workflow file manually in the `.github/workflows` folder using the model shown below; 
