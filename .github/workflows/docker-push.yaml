@@ -2,6 +2,7 @@ on:
   push:
     paths:
       - 'docker/**'
+  workflow_dispatch:
 
 name: docker
 
